@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- The following meta tag used to speed up canvas playback on mobile -->
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0">
+	    <title>Laura's Costume</title>
+	</head>
+	<style type="text/css">
+	    /*Utility*/
+	    html, body {
+	        width: 100%;
+	        height: 100%;
+	        margin: 0;
+	        padding: 0;
+	        background-color: #fff;
+	        overflow: hidden;
+	    }
+	    #wrapper{
+	        width: 100%;
+    		height: 100%;
+	        overflow: hidden;
+	    }
+	    .img100{
+	    	position: absolute;
+	    	top: 50%;left: 0%;
+	    	transform: translateY(-50%);
+	    	-webkit-transform: translateY(-50%);
+			width: 100%;
+		}
+		.no-select{
+			-webkit-user-select: none;
+			   -moz-user-select: none;
+			    -ms-user-select: none;
+			        user-select: none;
+		}
+		.no-show{
+			visibility: hidden;
+		}
+		.fade-out{
+			opacity: 0 !important;
+		}
+		#blocker{
+			position: absolute;
+    		top: 50%;
+    		transform: translateY(-50%);
+    		-webkit-transform: translateY(-50%);
+			width: 100vw;
+			/*height: 100vh;*/
+			color: black;
+			font-family: sans-serif;
+			font-size: 7vw;
+			letter-spacing: 2px;
+			display: inline-block;
+    		vertical-align: bottom;
+    		text-align: center;
+		}
+		@media screen and (min-aspect-ratio: 7/10){
+			/*less than 1080x1548*/
+			
+		}
+	</style>
+	<body onload="init()">
+	<div id="wrapper">
+		<div id="blocker">Generating Costume...</div>
+	</div>
+	<script src="https://code.createjs.com/preloadjs-0.6.2.min.js"></script>
+	<script type="text/javascript">
+		function init(){
+			var srcs = ['./img/osterich.jpg','./img/lobster.jpg', './img/shark.jpg', './img/squirrel.jpg'];
+			var chosen = getRanInt(0,4);
+			console.log(srcs[chosen]);
+
+			var preload = new createjs.LoadQueue();
+			preload.addEventListener("fileload", onReady);
+			preload.loadFile(srcs[chosen]);
+
+			function getRanInt (min, max) {
+			    return Math.floor(Math.random() * (max - min) ) + min;
+			}
+		}
+	    function onReady(e){
+	    	var image = e.result;
+	    	image.className = 'img100';
+			document.getElementById('wrapper').appendChild(image);
+			document.getElementById('blocker').style.visibility = 'hidden';
+			var imgs = document.querySelectorAll('img');
+			imgs.forEach(function(obj,i){
+				obj.draggable = false;
+			})
+	    }
+	    function handleEvents(bool, obj, func, type){
+		    var event;
+		    var _that = obj;
+		    var active = bool;
+		    var isTouchSupported = 'ontouchstart' in window;
+
+		    if(type=='touchstart'){
+		    	type = isTouchSupported ? 'touchstart' : 'mousedown';
+		    }else if (type == 'touchmove') {
+		    	type = isTouchSupported ? 'touchmove' : 'mousemove';
+		    }else if (type == 'touchend') {
+		    	type = isTouchSupported ? 'touchend' : 'mouseup';
+		    }
+
+		    (active) ? _that.addEventListener( type, func, {passive:false} ) : _that.removeEventListener( type, func, {passive:false} );
+		}
+
+	</script>
+	</body>
+</html>
